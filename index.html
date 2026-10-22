@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GitHub Ready — Final Exam | Zed-King</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f6f8; --card:#ffffff; --ink:#151a23; --muted:#5d6675; --line:#e2e5ea;
+  --brand:#1f6feb; --brand-ink:#ffffff; --ok:#1a7f37; --bad:#cf222e; --warn:#9a6700; --warn-bg:#fff8c5;
+  --chip:#eef2f7; --sel:#e7f0ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,sans-serif;font-size:16px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding:16px}
+header.top{background:#0d1117;color:#fff}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
+.brand{font-weight:700;letter-spacing:.2px}
+.brand small{display:block;font-weight:500;color:#9aa4b2;font-size:12px}
+.timer{font-family:"JetBrains Mono",monospace;font-size:18px;background:#21262d;padding:6px 12px;border-radius:8px;display:none}
+.timer.low{background:var(--bad)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0}
+h1{font-size:22px;margin:0 0 4px} h2{font-size:18px;margin:0 0 12px}
+p.sub{color:var(--muted);margin:0 0 16px}
+label{display:block;font-weight:600;font-size:14px;margin:14px 0 6px}
+input[type=text],input[type=url]{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:16px;font-family:inherit}
+input:focus{outline:2px solid var(--brand);border-color:transparent}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:10px;padding:12px 18px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn.primary{background:var(--brand);color:var(--brand-ink)}
+.btn.ghost{background:var(--chip);color:var(--ink)}
+.btn.danger{background:var(--bad);color:#fff}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.spacer{flex:1}
+.err{color:var(--bad);font-size:14px;margin-top:10px;min-height:1em}
+.marks{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0 4px}
+.marks td{padding:8px 10px;border-bottom:1px solid var(--line)} .marks td:last-child{text-align:right;font-weight:600}
+.marks tr.total td{border-bottom:0;font-size:15px}
+ul.rules{padding-left:18px;margin:8px 0} ul.rules li{margin:6px 0}
+.pill{display:inline-block;background:var(--chip);border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;color:var(--muted)}
+.qmeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.qtext{font-size:17px;font-weight:600;margin:4px 0 16px}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0;font-size:15px;cursor:pointer;font-family:inherit;color:var(--ink)}
+.opt .k{flex:none;width:26px;height:26px;border-radius:50%;background:var(--chip);display:grid;place-items:center;font-weight:700;font-size:13px}
+.opt.on{border-color:var(--brand);background:var(--sel)} .opt.on .k{background:var(--brand);color:#fff}
+.pal{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-top:10px}
+.pal button{aspect-ratio:1;border:1px solid var(--line);background:#fff;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--ink)}
+.pal button.ans{background:var(--ok);color:#fff;border-color:var(--ok)}
+.pal button.cur{outline:2px solid var(--brand);outline-offset:1px}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:4px;border:1px solid var(--line)}
+.warnbar{display:none;background:var(--warn-bg);color:var(--warn);border:1px solid #eac54f;border-radius:10px;padding:10px 12px;font-size:14px;margin-top:12px}
+.task{border-left:4px solid var(--brand);background:#f8fafc;border-radius:8px;padding:12px 14px;margin:10px 0}
+.task b{display:block} .task .m{float:right;font-size:12px;color:var(--muted);font-weight:700}
+code,.mono{font-family:"JetBrains Mono",monospace;font-size:13px;background:var(--chip);padding:1px 6px;border-radius:5px}
+.big{font-size:40px;font-weight:700;text-align:center;margin:6px 0}
+.center{text-align:center}
+.hidden{display:none!important}
+.noselect{user-select:none;-webkit-user-select:none}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:16px;z-index:9}
+.modal .card{max-width:420px;width:100%}
+@media (max-width:520px){ .pal{grid-template-columns:repeat(8,1fr)} .card{padding:16px} }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="brand">GitHub Ready — Final Exam<small>Zed-King Group of Institutions</small></div>
+  <div class="timer" id="timer">60:00</div>
+</div></header>
+
+<main class="wrap">
+
+<!-- 1. DETAILS -->
+<section id="s-details" class="card">
+  <h1>Student details</h1>
+  <p class="sub">Fill your details exactly as in institute records. Paper will start after this.</p>
+  <form id="f-details" autocomplete="off">
+    <label for="d-name">Full name</label>
+    <input type="text" id="d-name" required maxlength="60">
+    <label for="d-father">Father's name</label>
+    <input type="text" id="d-father" required maxlength="60">
+    <label for="d-id">Student ID</label>
+    <input type="text" id="d-id" required maxlength="30" placeholder="e.g. ZK2026-014">
+    <div id="code-wrap">
+      <label for="d-code">Exam code (teacher will tell in class)</label>
+      <input type="text" id="d-code" maxlength="20">
+    </div>
+    <div class="err" id="e-details"></div>
+    <button class="btn primary" type="submit" id="b-details">Continue</button>
+  </form>
+</section>
+
+<!-- 2. INSTRUCTIONS -->
+<section id="s-rules" class="card hidden">
+  <h1>Instructions</h1>
+  <p class="sub" id="who"></p>
+  <table class="marks">
+    <tr><td>Part A — MCQ (50 questions × 1 mark, −0.5 per wrong)</td><td>50</td></tr>
+    <tr><td>Part B — GitHub practical task</td><td>20</td></tr>
+    <tr><td>Viva (in class)</td><td>10</td></tr>
+    <tr><td>Uniform, discipline & other activities</td><td>20</td></tr>
+    <tr class="total"><td>Total</td><td>100</td></tr>
+  </table>
+  <ul class="rules">
+    <li>Every student gets a <b>different paper</b> — copying from your neighbour will not help.</li>
+    <li>Time: <b><span id="dur"></span> minutes</b>. The paper submits automatically when time ends.</li>
+    <li><b>Wrong answer = −0.5 marks.</b> Unattempted = 0. If you are not sure, leave it.</li>
+    <li>Do not switch apps/tabs. Every switch is recorded and shown to your teacher.</li>
+    <li>If the page refreshes by mistake, open the same link and enter the same Student ID — your paper and timer continue.</li>
+    <li>You can submit the paper <b>only once</b>.</li>
+  </ul>
+  <div class="row" style="margin-top:14px">
+    <button class="btn ghost" id="b-back">Back</button>
+    <span class="spacer"></span>
+    <button class="btn primary" id="b-start">Start paper</button>
+  </div>
+</section>
+
+<!-- 3. EXAM -->
+<section id="s-exam" class="hidden noselect">
+  <div class="card">
+    <div class="qmeta">
+      <span class="pill" id="q-num">Q 1 / 50</span>
+      <span class="pill" id="q-count">Attempted 0</span>
+    </div>
+    <div class="qtext" id="q-text"></div>
+    <div id="q-opts"></div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn ghost" id="b-prev">← Prev</button>
+      <button class="btn ghost" id="b-clear">Clear</button>
+      <span class="spacer"></span>
+      <button class="btn primary" id="b-next">Next →</button>
+    </div>
+    <div class="warnbar" id="warn"></div>
+  </div>
+  <div class="card">
+    <div class="row"><h2 style="margin:0">Question palette</h2><span class="spacer"></span>
+      <button class="btn danger" id="b-submit">Submit paper</button></div>
+    <div class="pal" id="pal"></div>
+    <div class="legend"><span><i style="background:var(--ok);border-color:var(--ok)"></i>Answered</span><span><i></i>Not answered</span></div>
+  </div>
+</section>
+
+<!-- 4. MCQ DONE + PRACTICAL -->
+<section id="s-practical" class="hidden">
+  <div class="card center">
+    <h1 id="done-title">Part A submitted ✓</h1>
+    <p class="sub" id="done-sub">Your MCQ answers are saved. Now complete Part B.</p>
+    <div id="score-box" class="hidden"><div class="big" id="score"></div><p class="sub" id="score-detail"></p></div>
+  </div>
+  <div class="card">
+    <h2>Part B — GitHub practical task (20 marks)</h2>
+    <p class="sub">Do this on your own GitHub account. Use exactly this repository name:</p>
+    <p class="center"><span class="mono" id="repo-name" style="font-size:16px"></span></p>
+    <div class="task"><span class="m">2 marks</span><b>1. Create the repository</b>Create a <b>public</b> repository with the name above, initialised with a README.md.</div>
+    <div class="task"><span class="m">4 marks</span><b>2. README in Markdown</b>Write your README with: a level-1 heading (your name), an "About me" section, <b>bold</b> text, a bullet list of 3 skills, a link to your LinkedIn or email, a task list with at least 2 items, and one image.</div>
+    <div class="task"><span class="m">3 marks</span><b>3. Website + clean commits</b>Add an <code>index.html</code> personal profile page (name, Student ID, course, skills). Make at least <b>3 commits</b> with meaningful messages (not "update").</div>
+    <div class="task"><span class="m">3 marks</span><b>4. Issue</b>Open an issue titled <b>"Add contact section"</b> and give it a label.</div>
+    <div class="task"><span class="m">5 marks</span><b>5. Branch + pull request</b>Create a branch <code>feature-contact</code>, add a contact section to <code>index.html</code>, open a pull request to <code>main</code> with <code>Closes #&lt;issue number&gt;</code> in the description, then merge it. The issue must close automatically.</div>
+    <div class="task"><span class="m">3 marks</span><b>6. Publish with GitHub Pages</b>Enable GitHub Pages from the <code>main</code> branch and check that your site opens.</div>
+
+    <h2 style="margin-top:22px">Submit your links</h2>
+    <form id="f-prac" autocomplete="off">
+      <label for="p-user">GitHub username</label>
+      <input type="text" id="p-user" required maxlength="40">
+      <label for="p-repo">Repository URL</label>
+      <input type="url" id="p-repo" required placeholder="https://github.com/username/repo-name">
+      <label for="p-pages">GitHub Pages URL</label>
+      <input type="url" id="p-pages" placeholder="https://username.github.io/repo-name/">
+      <div class="err" id="e-prac"></div>
+      <button class="btn primary" type="submit" id="b-prac">Submit Part B</button>
+      <p class="sub" style="margin-top:10px;font-size:13px">You can resubmit later with the same Student ID — the latest links are kept. Do not change the repo after the deadline; commit dates are checked.</p>
+    </form>
+  </div>
+</section>
+
+<!-- 5. ALL DONE -->
+<section id="s-final" class="card center hidden">
+  <h1>All done ✓</h1>
+  <p class="sub">Part A and Part B are submitted. Viva will be taken in class.</p>
+</section>
+
+</main>
+
+<div class="modal" id="modal"><div class="card">
+  <h2>Submit paper?</h2>
+  <p id="m-text"></p>
+  <div class="row"><button class="btn ghost" id="m-no">Go back</button><span class="spacer"></span><button class="btn danger" id="m-yes">Yes, submit</button></div>
+</div></div>
+
+<script>
+/* ================= CONFIG ================= */
+const SCRIPT_URL  = "https://script.google.com/macros/s/AKfycbyQt6ReFhhP0lFHILuefRaE3VNslDYv4fvCUNNFOX41daVqRfIVE2yd_SoCf_FugkpZRg/exec";
+const DURATION_MIN = 60;      // MCQ time
+const EXAM_CODE    = "";      // e.g. "GH2610" — leave "" to not ask for a code
+const SHOW_SCORE   = false;   // true = show MCQ score to student after submit
+/* ========================================== */
+
+const BANK = [{"key": "git", "title": "Introduction to Git", "pick": 4, "qs": [{"id": "git-1", "q": "What is Git?", "o": ["A distributed version control system", "A website for hosting videos", "A programming language", "A code editor like VS Code"]}, {"id": "git-2", "q": "Which command creates a new Git repository in the current folder?", "o": ["git start", "git init", "git create", "git new"]}, {"id": "git-3", "q": "Which command shows which files are modified, staged or untracked?", "o": ["git log", "git show", "git status", "git check"]}, {"id": "git-4", "q": "Which command moves changes into the staging area?", "o": ["git commit", "git push", "git save", "git add"]}, {"id": "git-5", "q": "What does git commit -m \"message\" do?", "o": ["Records the staged changes as a snapshot with a message", "Uploads files directly to GitHub", "Deletes the last commit", "Creates a new branch called message"]}, {"id": "git-6", "q": "Which command shows the history of commits?", "o": ["git status", "git log", "git diff", "git branch"]}, {"id": "git-7", "q": "Which file tells Git which files or folders to ignore?", "o": [".gitconfig", "ignore.txt", ".gitignore", "README.md"]}, {"id": "git-8", "q": "Which command creates a new branch named feature AND switches to it?", "o": ["git branch feature --go", "git merge feature", "git new feature", "git checkout -b feature"]}]}, {"key": "github", "title": "Introduction to GitHub", "pick": 4, "qs": [{"id": "github-1", "q": "What is GitHub?", "o": ["A cloud platform to host Git repositories and collaborate on code", "The version control system itself", "An operating system", "A database server"]}, {"id": "github-2", "q": "What is a fork on GitHub?", "o": ["A way to delete a repository", "Your own copy of someone else's repository", "A type of merge conflict", "A GitHub billing plan"]}, {"id": "github-3", "q": "GitHub Issues are mainly used to:", "o": ["Store passwords", "Host websites", "Track bugs, tasks and feature ideas", "Run Python code"]}, {"id": "github-4", "q": "What is the purpose of a README.md file?", "o": ["It stores Git settings", "It is the licence of the project", "It lists ignored files", "It introduces and explains the project"]}, {"id": "github-5", "q": "Cloning a repository means:", "o": ["Downloading a full copy of the repository to your computer", "Deleting the remote repository", "Opening a pull request", "Starring a repository"]}, {"id": "github-6", "q": "Which command sends your local commits to the remote repository on GitHub?", "o": ["git pull", "git push", "git clone", "git init"]}, {"id": "github-7", "q": "What does git pull do?", "o": ["Deletes the remote branch", "Pushes local commits", "Fetches changes from the remote and merges them into your branch", "Creates a new repository"]}, {"id": "github-8", "q": "GitHub Discussions are best used for:", "o": ["Running CI/CD pipelines", "Storing secrets", "Billing and payments", "Open-ended conversations and Q&A with the community"]}]}, {"key": "products", "title": "Introduction to GitHub's products", "pick": 3, "qs": [{"id": "products-1", "q": "GitHub Actions is used for:", "o": ["Automating workflows such as build, test and deploy (CI/CD)", "Designing logos", "Video calls", "Sending marketing emails"]}, {"id": "products-2", "q": "Where are GitHub Actions workflow files stored in a repository?", "o": [".git/hooks", ".github/workflows", "/actions", "/src/workflows"]}, {"id": "products-3", "q": "GitHub Codespaces provides:", "o": ["A free domain name", "An antivirus scanner", "A cloud-hosted development environment", "A team chat app"]}, {"id": "products-4", "q": "GitHub Packages is used to:", "o": ["Store photos", "Track issues", "Host websites", "Host and publish software packages"]}, {"id": "products-5", "q": "GitHub Copilot is best described as:", "o": ["An AI pair programmer that suggests code", "A version control system", "A web hosting service", "A database"]}, {"id": "products-6", "q": "GitHub Mobile lets you:", "o": ["Compile Android apps", "Manage issues, pull requests and notifications from your phone", "Replace Git completely", "Host a website from your phone"]}, {"id": "products-7", "q": "Which GitHub plan is designed for large organizations needing advanced admin and security controls?", "o": ["GitHub Lite", "GitHub Personal Free", "GitHub Enterprise", "GitHub Basic Student"]}]}, {"key": "markdown", "title": "Communicate effectively on GitHub using Markdown", "pick": 4, "qs": [{"id": "markdown-1", "q": "How do you write a level-1 heading in Markdown?", "o": ["# Heading", "== Heading", "* Heading", "<h> Heading"]}, {"id": "markdown-2", "q": "How do you make text bold in Markdown?", "o": ["_text_", "**text**", "~~text~~", "`text`"]}, {"id": "markdown-3", "q": "Which is the correct Markdown syntax for a link?", "o": ["(text)[url]", "<text>url", "[text](url)", "{text}{url}"]}, {"id": "markdown-4", "q": "Which is the correct Markdown syntax for an image?", "o": ["[img](url)", "!(alt)[url]", "<<url>>", "![alt text](url)"]}, {"id": "markdown-5", "q": "Inline code in Markdown is wrapped in:", "o": ["Backticks ( ` )", "Double quotes", "Asterisks", "Square brackets"]}, {"id": "markdown-6", "q": "How do you create an unchecked task list item on GitHub?", "o": ["- ( ) task", "- [ ] task", "* { } task", "[] - task"]}, {"id": "markdown-7", "q": "How do you mention (notify) a user in a GitHub comment?", "o": ["#username", "!username", "@username", "$username"]}, {"id": "markdown-8", "q": "In a GitHub comment, typing #12 will:", "o": ["Make a heading", "Mention user 12", "Create 12 bullet points", "Link to issue or pull request number 12"]}]}, {"key": "projects", "title": "Manage your work with GitHub Projects", "pick": 3, "qs": [{"id": "projects-1", "q": "GitHub Projects is:", "o": ["A flexible tool to plan and track work, integrated with issues and pull requests", "A CI/CD tool", "A package registry", "A code editor"]}, {"id": "projects-2", "q": "Which layouts can a GitHub Project view use?", "o": ["Only list", "Table, board and roadmap", "Only pie chart", "Only calendar"]}, {"id": "projects-3", "q": "Which item types can be added to a GitHub Project?", "o": ["Only commits", "Only files", "Issues, pull requests and draft issues", "Only wiki pages"]}, {"id": "projects-4", "q": "An iteration field in GitHub Projects is used to:", "o": ["Count lines of code", "Store passwords", "Rename repositories", "Plan work in time-boxed periods like sprints"]}, {"id": "projects-5", "q": "In the board layout, items appear as:", "o": ["Cards arranged in columns such as Todo, In Progress, Done", "A single long paragraph", "Commit hashes", "Terminal output"]}, {"id": "projects-6", "q": "Which is a valid custom field type in GitHub Projects?", "o": ["Video", "Single select", "Password", "Audio"]}, {"id": "projects-7", "q": "Built-in Project workflows (automations) can:", "o": ["Write code automatically", "Delete the repository", "Set an item's status automatically, e.g. to Done when an issue is closed", "Transfer money"]}]}, {"key": "pr", "title": "Manage repository changes by using pull requests", "pick": 4, "qs": [{"id": "pr-1", "q": "A pull request is:", "o": ["A proposal to merge changes from one branch into another, with review", "A command to download code", "A way to delete a branch", "A GitHub billing request"]}, {"id": "pr-2", "q": "Before opening a pull request, your changes should normally be on:", "o": ["A tag", "A separate branch", "A release", "The README"]}, {"id": "pr-3", "q": "When reviewing a pull request, a reviewer can:", "o": ["Only delete it", "Only star it", "Comment, approve, or request changes", "Only fork it"]}, {"id": "pr-4", "q": "A merge conflict happens when:", "o": ["The internet is slow", "A repository is public", "A branch has no commits", "Both branches changed the same lines differently"]}, {"id": "pr-5", "q": "A draft pull request means:", "o": ["The pull request is not ready for review yet", "The pull request is already merged", "The pull request is deleted", "The pull request has no code"]}, {"id": "pr-6", "q": "Which text in a PR description will close issue #5 automatically when the PR is merged?", "o": ["Open #5", "Closes #5", "Link #5", "Issue = 5"]}, {"id": "pr-7", "q": "What does \"Squash and merge\" do?", "o": ["Deletes all commits", "Creates a new repository", "Combines all the PR's commits into one commit on the base branch", "Reverts the pull request"]}]}, {"key": "codespaces", "title": "Code with GitHub Codespaces", "pick": 3, "qs": [{"id": "codespaces-1", "q": "Where does a GitHub Codespace run?", "o": ["On a cloud-hosted virtual machine/container", "Only on your phone", "Inside your printer", "Only offline on your PC"]}, {"id": "codespaces-2", "q": "Which file configures the dev container for a codespace?", "o": ["package.json", "devcontainer.json", "codespace.yml", "index.html"]}, {"id": "codespaces-3", "q": "When you open a codespace in the browser, which editor do you get?", "o": ["Notepad", "Eclipse", "A web-based version of VS Code", "MS Word"]}, {"id": "codespaces-4", "q": "A key benefit of Codespaces is:", "o": ["It makes the repository private", "It removes the need for Git", "It gives free web hosting", "A ready, consistent environment without installing tools locally"]}, {"id": "codespaces-5", "q": "Why should you stop or delete codespaces you are not using?", "o": ["To save your usage hours and storage quota", "To delete your GitHub account", "To make your code public", "To merge pull requests"]}, {"id": "codespaces-6", "q": "How do you create a codespace for a repository?", "o": ["Settings > Delete repository", "Code button > Codespaces tab > Create codespace", "Issues > New issue", "Insights > Traffic"]}, {"id": "codespaces-7", "q": "In a codespace, port forwarding lets you:", "o": ["Change your GitHub password", "Send email", "Preview a web app running inside the codespace in your browser", "Increase internet speed"]}]}, {"key": "copilot", "title": "Introduction to GitHub Copilot", "pick": 4, "qs": [{"id": "copilot-1", "q": "GitHub Copilot is powered by:", "o": ["Generative AI / large language models", "Only spell-check rules", "Manual human typing", "Excel formulas"]}, {"id": "copilot-2", "q": "In VS Code, which key accepts a Copilot inline suggestion?", "o": ["Esc", "Tab", "F5", "Ctrl + Z"]}, {"id": "copilot-3", "q": "Copilot Chat lets you:", "o": ["Make phone calls", "Edit images", "Ask coding questions in natural language inside the editor", "Host a website"]}, {"id": "copilot-4", "q": "Code suggested by Copilot should be:", "o": ["Trusted without checking", "Deleted every time", "Copied to production immediately", "Reviewed and tested by the developer"]}, {"id": "copilot-5", "q": "In Copilot Chat, the /explain command is used to:", "o": ["Explain the selected code", "Delete the file", "Deploy the app", "Commit the code"]}, {"id": "copilot-6", "q": "In Copilot Chat, the /tests command helps to:", "o": ["Delete old tests", "Generate unit tests for the selected code", "Push code to GitHub", "Rename the repository"]}, {"id": "copilot-7", "q": "Which of these editors supports GitHub Copilot?", "o": ["MS Paint", "Windows Notepad", "Visual Studio Code", "Calculator"]}]}, {"key": "prompt", "title": "Introduction to prompt engineering with GitHub Copilot", "pick": 3, "qs": [{"id": "prompt-1", "q": "A good prompt for Copilot should be:", "o": ["Clear, specific and give enough context", "As short as one word", "Written in random order", "Without any goal"]}, {"id": "prompt-2", "q": "Giving a few examples inside your prompt is called:", "o": ["Zero-shot prompting", "Few-shot prompting", "Jailbreaking", "Debugging"]}, {"id": "prompt-3", "q": "Zero-shot prompting means:", "o": ["Giving many examples", "Not writing any prompt", "Asking for a task without giving examples", "Giving zero context on purpose to confuse"]}, {"id": "prompt-4", "q": "For a complex task, Copilot usually gives better results when you:", "o": ["Write everything in one huge vague line", "Use only emojis", "Never give context", "Break it into smaller, step-by-step prompts"]}, {"id": "prompt-5", "q": "Copilot uses which context to make suggestions?", "o": ["Your open files and the code around your cursor", "Your phone gallery", "Your bank account", "Random websites only"]}, {"id": "prompt-6", "q": "Writing a descriptive comment above a function before coding helps Copilot to:", "o": ["Slow down the editor", "Generate code that matches your intent", "Delete the function", "Rename the file"]}, {"id": "prompt-7", "q": "Which is the BEST prompt?", "o": ["code pls", "email", "Write a Python function that checks if an email address is valid using regex and returns True or False", "do it fast"]}]}, {"key": "rai", "title": "Responsible AI with GitHub Copilot", "pick": 3, "qs": [{"id": "rai-1", "q": "Which of these is NOT one of Microsoft's six responsible AI principles?", "o": ["Profitability", "Fairness", "Transparency", "Accountability"]}, {"id": "rai-2", "q": "The fairness principle means an AI system should:", "o": ["Always agree with the user", "Treat all people fairly, without bias", "Be free of cost", "Work only in English"]}, {"id": "rai-3", "q": "Transparency in AI means:", "o": ["The AI must be open source", "The screen must be transparent", "People should understand how the AI works and its limitations", "AI hides its decisions"]}, {"id": "rai-4", "q": "Accountability in AI means:", "o": ["The AI is responsible and humans are not", "Nobody is responsible", "Only users are blamed", "People who design and deploy AI remain responsible for its outcomes"]}, {"id": "rai-5", "q": "To protect privacy while using Copilot, you should:", "o": ["Avoid putting passwords, keys or personal data in prompts", "Paste API keys in every prompt", "Share student data in prompts", "Disable your password"]}, {"id": "rai-6", "q": "An AI 'hallucination' is when the AI:", "o": ["Runs out of battery", "Gives a confident but incorrect or made-up answer", "Refuses to answer", "Crashes the editor"]}, {"id": "rai-7", "q": "The inclusiveness principle means AI should:", "o": ["Work only for experts", "Ignore people with disabilities", "Empower and engage everyone, including people with disabilities", "Be used only by companies"]}]}, {"key": "history", "title": "Search and organize repository history", "pick": 3, "qs": [{"id": "history-1", "q": "What does git blame show?", "o": ["Who last changed each line of a file, and in which commit", "Who deleted the repository", "List of all branches", "Failing tests"]}, {"id": "history-2", "q": "Which search qualifiers find only open issues?", "o": ["type:open pr", "is:issue is:open", "find:issues", "issue=open"]}, {"id": "history-3", "q": "Labels on GitHub are used to:", "o": ["Encrypt code", "Rename repositories", "Categorize issues and pull requests", "Create branches"]}, {"id": "history-4", "q": "Milestones on GitHub are used to:", "o": ["Measure internet speed", "Store images", "Set passwords", "Group issues and PRs towards a goal or due date"]}, {"id": "history-5", "q": "The search qualifier author:octocat finds:", "o": ["Items created by the user octocat", "Repositories named octocat", "Files called octocat", "Issues assigned to everyone"]}, {"id": "history-6", "q": "Which is the best commit message?", "o": ["update", "Add contact form validation to signup page", "asdf", "changes"]}, {"id": "history-7", "q": "Which command shows the changes between your working files and the last commit?", "o": ["git log", "git clone", "git diff", "git init"]}]}, {"key": "security", "title": "Maintain a secure repository using GitHub best practices", "pick": 4, "qs": [{"id": "security-1", "q": "Dependabot helps by:", "o": ["Alerting about vulnerable dependencies and opening PRs to update them", "Writing your README", "Designing your website", "Deleting old branches"]}, {"id": "security-2", "q": "Secret scanning detects:", "o": ["Spelling mistakes", "API keys and tokens accidentally committed", "Unused CSS", "Large images"]}, {"id": "security-3", "q": "A SECURITY.md file tells people:", "o": ["How to install the project", "Who the project owner's friends are", "How to report a security vulnerability", "The project's colour theme"]}, {"id": "security-4", "q": "Branch protection rules can:", "o": ["Make the repo faster", "Hide the README", "Delete issues", "Require pull request reviews before merging into main"]}, {"id": "security-5", "q": "Enabling two-factor authentication (2FA) on your GitHub account:", "o": ["Adds a second verification step when you sign in", "Makes all repos public", "Removes your password", "Doubles your storage"]}, {"id": "security-6", "q": "Code scanning with CodeQL is used to:", "o": ["Count stars", "Find security vulnerabilities and coding errors in your code", "Translate code to Hindi", "Compress files"]}, {"id": "security-7", "q": "Where should you keep an API key used by a GitHub Actions workflow?", "o": ["In README.md", "In a public commit", "In GitHub encrypted secrets", "In the repository name"]}, {"id": "security-8", "q": "The principle of least privilege means:", "o": ["Everyone gets admin access", "No one gets any access", "Only the owner can read code", "Give people only the access they actually need"]}]}, {"key": "opensource", "title": "Contribute to an open-source project on GitHub", "pick": 4, "qs": [{"id": "opensource-1", "q": "A CONTRIBUTING.md file contains:", "o": ["Guidelines on how to contribute to the project", "The project's passwords", "Compiled code", "Website images"]}, {"id": "opensource-2", "q": "Issues labelled 'good first issue' are:", "o": ["Already closed forever", "Suitable tasks for beginners/new contributors", "Security secrets", "Paid tasks only"]}, {"id": "opensource-3", "q": "What is the usual order to contribute to someone else's project?", "o": ["PR > clone > fork > commit", "Commit > fork > PR > clone", "Fork > clone > branch > commit > push > pull request", "Push > fork > delete > PR"]}, {"id": "opensource-4", "q": "A LICENSE file in a repository:", "o": ["Lists contributors' phone numbers", "Stores build output", "Configures GitHub Pages", "Defines how others may use, modify and share the code"]}, {"id": "opensource-5", "q": "A CODE_OF_CONDUCT.md file defines:", "o": ["Expected behaviour and standards for the community", "The coding language", "Git commands", "Server settings"]}, {"id": "opensource-6", "q": "Before starting work on an open issue, good practice is to:", "o": ["Start silently and open 10 PRs", "Comment on the issue / check that no one else is already working on it", "Delete the issue", "Fork every repo of the owner"]}, {"id": "opensource-7", "q": "To keep your fork updated with the original repository you:", "o": ["Delete and recreate the fork daily", "Email the owner", "Sync with the upstream (original) repository", "Change the repo name"]}, {"id": "opensource-8", "q": "Which of these is an open-source licence?", "o": ["Windows EULA", "Proprietary licence", "Shareware", "MIT License"]}]}, {"key": "pages", "title": "Create and host web sites by using GitHub Pages", "pick": 4, "qs": [{"id": "pages-1", "q": "GitHub Pages is used to:", "o": ["Host static websites directly from a repository", "Run MySQL databases", "Send emails", "Edit videos"]}, {"id": "pages-2", "q": "What is the URL of a GitHub Pages user site?", "o": ["github.com/username/site", "username.github.io", "pages.github.com/username", "username.pages.com"]}, {"id": "pages-3", "q": "Which kind of website can GitHub Pages host?", "o": ["PHP + MySQL backend", "Java servlets", "Static sites made of HTML, CSS and JavaScript", "Node.js server with database"]}, {"id": "pages-4", "q": "Which static site generator has built-in support in GitHub Pages?", "o": ["Django", "Laravel", "Spring", "Jekyll"]}, {"id": "pages-5", "q": "A GitHub Pages project site URL looks like:", "o": ["username.github.io/repository-name", "repository-name.com", "github.com/pages/repository-name", "username.repository-name.io"]}, {"id": "pages-6", "q": "Which file is shown as the homepage of a GitHub Pages site?", "o": ["home.css", "index.html", "main.js", "start.txt"]}, {"id": "pages-7", "q": "When a custom domain is set for GitHub Pages, which file stores it in the repo?", "o": ["DOMAIN.md", "site.json", "CNAME", "pages.cfg"]}, {"id": "pages-8", "q": "From where can a GitHub Pages site be published?", "o": ["Only from a ZIP file upload", "Only from Google Drive", "Only from a local folder on your PC", "From a branch (root or /docs folder) or a GitHub Actions workflow"]}]}];   // questions only — no answers in this file
+
+const $ = s => document.querySelector(s);
+const show = id => { document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden')); $(id).classList.remove('hidden'); window.scrollTo(0,0); };
+const store = {
+  get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+};
+const rnd = n => { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; };
+const shuffle = arr => { const a = arr.slice(); for (let i=a.length-1;i>0;i--){ const j=rnd(i+1); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const QMAP = {}; BANK.forEach(m => m.qs.forEach(q => QMAP[q.id] = q));
+
+let S = null;        // state
+let cur = 0, tick = null, student = null;
+
+async function api(body){
+  const r = await fetch(SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(body) });
+  return r.json();
+}
+
+function makePaper(){
+  let list = [];
+  BANK.forEach(m => { list = list.concat(shuffle(m.qs).slice(0, m.pick).map(q => q.id)); });
+  return shuffle(list).map(id => ({ id, order: shuffle(QMAP[id].o.map((_,i)=>i)) }));
+}
+const key = () => 'ghexam_' + student.id.toUpperCase();
+const save = () => store.set(key(), S);
+
+/* ---------- details ---------- */
+if (!EXAM_CODE) $('#code-wrap').classList.add('hidden');
+$('#dur').textContent = DURATION_MIN;
+
+$('#f-details').addEventListener('submit', async e => {
+  e.preventDefault();
+  const err = $('#e-details'); err.textContent = '';
+  const name = $('#d-name').value.trim(), father = $('#d-father').value.trim(), id = $('#d-id').value.trim();
+  if (name.length < 3 || father.length < 3 || id.length < 2) { err.textContent = 'Please fill all details correctly.'; return; }
+  if (EXAM_CODE && $('#d-code').value.trim().toUpperCase() !== EXAM_CODE.toUpperCase()) { err.textContent = 'Wrong exam code.'; return; }
+  student = { name, father, id };
+  const btn = $('#b-details'); btn.disabled = true; btn.textContent = 'Checking…';
+  try {
+    const r = await api({ action:'check', studentId:id });
+    if (r.ok && r.alreadySubmitted) { goPractical(true); return; }
+  } catch(ex) {
+    err.textContent = 'Could not connect. Check internet and try again.'; btn.disabled = false; btn.textContent = 'Continue'; return;
+  }
+  btn.disabled = false; btn.textContent = 'Continue';
+  S = store.get(key());
+  if (S && S.submitted) { goPractical(true); return; }
+  if (S && S.paper) { startExam(); return; }   // resume after refresh
+  $('#who').textContent = `${name} · S/o / D/o ${father} · ID ${id}`;
+  show('#s-rules');
+});
+$('#b-back').onclick = () => show('#s-details');
+$('#b-start').onclick = () => {
+  S = { paper: makePaper(), answers: {}, start: Date.now(), tabSwitches: 0, submitted: false };
+  save(); startExam();
+};
+
+/* ---------- exam ---------- */
+function startExam(){
+  show('#s-exam'); $('#timer').style.display = 'block';
+  buildPalette(); render(0);
+  tick = setInterval(updateTimer, 1000); updateTimer();
+}
+function remaining(){ return S.start + DURATION_MIN*60000 - Date.now(); }
+function updateTimer(){
+  const ms = remaining();
+  if (ms <= 0) { clearInterval(tick); $('#timer').textContent = '00:00'; doSubmit(true); return; }
+  const m = Math.floor(ms/60000), s = Math.floor(ms/1000)%60;
+  $('#timer').textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  $('#timer').classList.toggle('low', ms < 5*60000);
+}
+function attempted(){ return Object.values(S.answers).filter(v => v !== null && v !== undefined).length; }
+function render(i){
+  cur = i;
+  const p = S.paper[i], q = QMAP[p.id];
+  $('#q-num').textContent = `Q ${i+1} / ${S.paper.length}`;
+  $('#q-count').textContent = `Attempted ${attempted()}`;
+  $('#q-text').textContent = q.q;
+  const box = $('#q-opts'); box.innerHTML = '';
+  p.order.forEach((orig, k) => {
+    const b = document.createElement('button');
+    b.className = 'opt' + (S.answers[p.id] === orig ? ' on' : '');
+    b.innerHTML = `<span class="k">${'ABCD'[k]}</span><span></span>`;
+    b.lastChild.textContent = q.o[orig];
+    b.onclick = () => { S.answers[p.id] = orig; save(); render(i); };
+    box.appendChild(b);
+  });
+  $('#b-prev').disabled = i === 0;
+  $('#b-next').textContent = i === S.paper.length-1 ? 'Review' : 'Next →';
+  document.querySelectorAll('#pal button').forEach((b, k) => {
+    b.classList.toggle('ans', S.answers[S.paper[k].id] !== undefined && S.answers[S.paper[k].id] !== null);
+    b.classList.toggle('cur', k === i);
+  });
+}
+function buildPalette(){
+  const pal = $('#pal'); pal.innerHTML = '';
+  S.paper.forEach((_, k) => { const b = document.createElement('button'); b.textContent = k+1; b.onclick = () => render(k); pal.appendChild(b); });
+}
+$('#b-prev').onclick = () => cur > 0 && render(cur-1);
+$('#b-next').onclick = () => cur < S.paper.length-1 ? render(cur+1) : $('#pal').scrollIntoView({behavior:'smooth'});
+$('#b-clear').onclick = () => { delete S.answers[S.paper[cur].id]; save(); render(cur); };
+
+$('#b-submit').onclick = () => {
+  const a = attempted();
+  $('#m-text').textContent = `You attempted ${a} of ${S.paper.length} questions. ${S.paper.length - a} unattempted. You cannot change answers after submitting.`;
+  $('#modal').style.display = 'flex';
+};
+$('#m-no').onclick = () => $('#modal').style.display = 'none';
+$('#m-yes').onclick = () => { $('#modal').style.display = 'none'; doSubmit(false); };
+
+let submitting = false;
+async function doSubmit(auto){
+  if (submitting || S.submitted) return; submitting = true;
+  clearInterval(tick);
+  const answers = {}; S.paper.forEach(p => answers[p.id] = (S.answers[p.id] ?? null));
+  const payload = { action:'mcq', studentId:student.id, name:student.name, father:student.father, answers,
+    tabSwitches:S.tabSwitches, minutes: Math.round((Math.min(Date.now(), S.start + DURATION_MIN*60000) - S.start)/60000) };
+  $('#b-submit').disabled = true; $('#b-submit').textContent = 'Submitting…';
+  for (let t = 0; t < 4; t++) {
+    try {
+      const r = await api(payload);
+      if (r.ok || r.error === 'already_submitted') {
+        S.submitted = true; save(); $('#timer').style.display = 'none';
+        goPractical(false, r.ok ? r : null, auto); return;
+      }
+      throw new Error(r.error || 'failed');
+    } catch(ex) { await new Promise(res => setTimeout(res, 2500)); }
+  }
+  submitting = false;
+  $('#b-submit').disabled = false; $('#b-submit').textContent = 'Retry submit';
+  $('#warn').style.display = 'block';
+  $('#warn').textContent = 'Submit failed — no internet. Your answers are safe on this device. Turn on internet and press "Retry submit". Do NOT close this page.';
+}
+
+/* tab-switch tracking (a page refresh is not counted) */
+let leaving = false;
+window.addEventListener('beforeunload', () => { leaving = true; });
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && !leaving && S && S.paper && !S.submitted && !$('#s-exam').classList.contains('hidden')) {
+    S.tabSwitches++; save();
+    $('#warn').style.display = 'block';
+    $('#warn').textContent = `Warning: you left the exam screen ${S.tabSwitches} time(s). This is reported to your teacher.`;
+  }
+});
+['copy','cut','contextmenu'].forEach(ev => document.addEventListener(ev, e => { if (!$('#s-exam').classList.contains('hidden')) e.preventDefault(); }));
+
+/* ---------- practical ---------- */
+function goPractical(already, result, auto){
+  show('#s-practical'); $('#timer').style.display = 'none';
+  const slug = student.id.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  $('#repo-name').textContent = (slug.startsWith('zk') ? slug : 'zk-' + slug) + '-portfolio';
+  if (already) { $('#done-title').textContent = 'Part A already submitted'; $('#done-sub').textContent = 'Your MCQ paper was submitted earlier. Complete / update Part B below.'; }
+  else if (auto) { $('#done-title').textContent = 'Time over — Part A submitted ✓'; }
+  if (SHOW_SCORE && result) {
+    $('#score-box').classList.remove('hidden');
+    $('#score').textContent = `${result.marks} / 50`;
+    $('#score-detail').textContent = `Correct ${result.correct} · Wrong ${result.wrong} (−${result.wrong*0.5}) · Unattempted ${result.unattempted}`;
+  }
+}
+$('#f-prac').addEventListener('submit', async e => {
+  e.preventDefault();
+  const err = $('#e-prac'); err.textContent = '';
+  const ghUser = $('#p-user').value.trim(), repo = $('#p-repo').value.trim(), pages = $('#p-pages').value.trim();
+  if (!/^https:\/\/github\.com\/[^/]+\/[^/]+/i.test(repo)) { err.textContent = 'Repository URL must look like https://github.com/username/repo-name'; return; }
+  const btn = $('#b-prac'); btn.disabled = true; btn.textContent = 'Submitting…';
+  try {
+    const r = await api({ action:'practical', studentId:student.id, name:student.name, father:student.father, ghUser, repo, pages });
+    if (!r.ok) throw new Error(r.error);
+    show('#s-final');
+  } catch(ex) { err.textContent = 'Could not submit. Check internet and try again.'; }
+  btn.disabled = false; btn.textContent = 'Submit Part B';
+});
+</script>
+</body>
+</html>
